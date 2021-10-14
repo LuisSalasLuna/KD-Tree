@@ -51,7 +51,7 @@ class KDTree {
   ElemType &at(const Point<N> &pt);
   const ElemType &at(const Point<N> &pt) const;
 
-  void knn_aux(Point<N> key, KDTreeNode<value_type>* currentNode, KDTreeNode<value_type>*& guest, double& bestDistance, int nivel, std::vector<std::pair<ElemType, double> >& tipo) const;
+  void knn_aux(Point<N> key, KDTreeNode<value_type>* currentNode, int nivel, std::vector<std::pair<ElemType, double> >& tipo) const;
   ElemType knn_value(const Point<N> &key, size_t k) const;
   std::vector<ElemType> knn_query(const Point<N> &key, size_t k) const;
 
@@ -187,15 +187,15 @@ const ElemType &KDTree<N, ElemType>::at(const Point<N> &pt) const {
 
 
 template <size_t N, typename ElemType>
-void KDTree<N, ElemType>::knn_aux(Point<N> key, KDTreeNode<value_type>* cNode, KDTreeNode<value_type>*& guest, double& optimo, int nivel, std::vector<std::pair<ElemType, double> >& tipo) const
+void KDTree<N, ElemType>::knn_aux(Point<N> key, KDTreeNode<value_type>* cNode, int nivel, std::vector<std::pair<ElemType, double> >& tipo) const
 {
     if (cNode == nullptr)
         return;
     double d = distance((cNode->valor).first, key);
     tipo.push_back(std::make_pair((cNode->valor).second, d));
 
-    knn_aux(key, (cNode->nodes)[0], guest, optimo, ++nivel,tipo);
-    knn_aux(key, (cNode->nodes)[1], guest, optimo, ++nivel,tipo);
+    knn_aux(key, (cNode->nodes)[0], ++nivel,tipo);
+    knn_aux(key, (cNode->nodes)[1], ++nivel,tipo);
 }
 template <size_t N, typename ElemType>
 ElemType KDTree<N, ElemType>::knn_value(const Point<N> &key, size_t k) const {
@@ -236,11 +236,9 @@ template <size_t N, typename ElemType>
 std::vector<ElemType> KDTree<N, ElemType>::knn_query(const Point<N> &key, size_t k) const {
     std::vector<std::pair<ElemType, double> > tipo;
     KDTreeNode<value_type>* cNode = root;
-    KDTreeNode<value_type>* guest = nullptr;
-    double bestDistance = std::numeric_limits<double>::infinity();
     size_t nivel = 0;
 
-    knn_aux(key, cNode, guest, bestDistance, nivel, tipo);
+    knn_aux(key, cNode, nivel, tipo);
     std::sort(tipo.begin(), tipo.end(), [](const auto& x, const auto& y) { return x.second < y.second; });
     
     std::vector<ElemType> val;
