@@ -44,6 +44,7 @@ bool operator==(const Point<N>& one, const Point<N>& two);
 template <size_t N>
 bool operator!=(const Point<N>& one, const Point<N>& two);
 
+
 /** Point class implementation details */
 
 #include <algorithm>
