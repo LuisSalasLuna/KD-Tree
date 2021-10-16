@@ -31,7 +31,7 @@ struct KDTreeNode
 template <size_t N, typename ElemType>
 class KDTree {
  public:
-  typedef std::pair<Point<N>, ElemType> value_type;  //Importante------------------------------------------------
+  typedef std::pair<Point<N>, ElemType> value_type;
 
   KDTree();
   ~KDTree();
@@ -125,7 +125,7 @@ bool KDTree<N, ElemType>::empty() const {
 template <size_t N, typename ElemType> 
 bool KDTree<N, ElemType>::find(const Point<N>& pt, KDTreeNode<value_type>**& p) const {
     size_t i = 0;
-    for (p = const_cast<KDTreeNode<value_type>**> (&root) ; *p && ((*p)->valor).first != pt; p = &((*p)->nodes[pt[i % N] > (((*p)->valor).first)[i % N]])) {//[adaptarse a cada sub nivel]
+    for (p = const_cast<KDTreeNode<value_type>**> (&root) ; *p && ((*p)->valor).first != pt; p = &((*p)->nodes[pt[i % N] > (((*p)->valor).first)[i % N]])) {
         i++;
     }
     return *p != 0;
