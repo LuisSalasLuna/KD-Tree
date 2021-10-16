@@ -58,17 +58,17 @@ class KDTree {
  private:
   size_t dimension_;
   size_t size_;
-  KDTreeNode<value_type>* root = nullptr;
+  KDTreeNode<value_type>* root = nullptr;  //Raiz inicializada en nullptr
 };
 
 template <size_t N, typename ElemType>
-KDTree<N, ElemType>::KDTree() {
+KDTree<N, ElemType>::KDTree() { //Creacion de instancia KD-Tree
     dimension_ = N;
     size_ = 0;
 }
 
 template <typename value_type>
-void deleter(KDTreeNode<value_type>* node)
+void deleter(KDTreeNode<value_type>* node) //Funcion auxiliar recursiva de borrado de nodos
 {
     if (node != nullptr) {
         deleter((node->nodes)[1]);
@@ -78,12 +78,11 @@ void deleter(KDTreeNode<value_type>* node)
 }
 
 template <size_t N, typename ElemType>
-KDTree<N, ElemType>::~KDTree() {
+KDTree<N, ElemType>::~KDTree() { //Implementacion de funcion recursiva auxiliar
     deleter(root);
-    //root = nullptr;
 }
 template <typename value_type>
-KDTreeNode<value_type>* copyNodes(const KDTreeNode<value_type>* node)
+KDTreeNode<value_type>* copyNodes(const KDTreeNode<value_type>* node)  //Funcion de creacion de copia de nodos de un KD-Tree, usa root de parametro y avanza entre sus hijos
 {
     if (node != nullptr){
         KDTreeNode<value_type>* nodeCopy = new KDTreeNode<value_type>(node->valor, copyNodes((node->nodes)[0]), copyNodes((node->nodes)[1]));
@@ -123,7 +122,7 @@ bool KDTree<N, ElemType>::empty() const {
 }
 
 template <size_t N, typename ElemType> 
-bool KDTree<N, ElemType>::find(const Point<N>& pt, KDTreeNode<value_type>**& p) const {
+bool KDTree<N, ElemType>::find(const Point<N>& pt, KDTreeNode<value_type>**& p) const { //Recibe un puntero doble como referencia y recorre entre sus hijos cumpliendo condiciones de nivel
     size_t i = 0;
     for (p = const_cast<KDTreeNode<value_type>**> (&root) ; *p && ((*p)->valor).first != pt; p = &((*p)->nodes[pt[i % N] > (((*p)->valor).first)[i % N]])) {
         i++;
